@@ -120,6 +120,7 @@ Test::Fake::HTTPD - a fake HTTP server
 =head1 SYNOPSIS
 
 DSL-style
+
     use Test::Fake::HTTPD;
 
     my $httpd = run_http_server {
@@ -142,6 +143,7 @@ DSL-style
     # Stop http server automatically at destruction time.
 
 OO-style
+
     use Test::Fake::HTTPD;
 
     my $httpd = Test::Fake::HTTPD->new(%args);
