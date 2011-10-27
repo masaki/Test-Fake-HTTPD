@@ -16,8 +16,12 @@ describe 'run_http_server' => sub {
         [ 200, [ 'Content-Type' => 'text/plain' ], [ 'Hello World' ] ];
     };
 
-    it 'should return a port number of running' => sub {
-        ok($httpd->port and $httpd->port > 0);
+    it 'should return a server info' => sub {
+        my $port = $httpd->port;
+        ok $port;
+        ok $port > 0;
+        is $httpd->host_port => "127.0.0.1:$port";
+        is $httpd->endpoint  => "http://127.0.0.1:$port";
     };
 
     it 'should connect to server' => sub {
@@ -25,7 +29,7 @@ describe 'run_http_server' => sub {
     };
 
     it 'should receive correct response' => sub {
-        my $res = LWP::UserAgent->new->get('http://127.0.0.1:'.$httpd->port);
+        my $res = LWP::UserAgent->new->get($httpd->endpoint);
         is $res->code => 200;
         is $res->header('Content-Type') => 'text/plain';
         is $res->content => 'Hello World';
