@@ -7,7 +7,7 @@ use HTTP::Daemon;
 use HTTP::Message::PSGI qw(res_from_psgi);
 use Test::TCP qw(wait_port);
 use Time::HiRes ();
-use Scalar::Util qw(blessed);
+use Scalar::Util qw(blessed weaken);
 use Carp qw(croak);
 use Exporter qw(import);
 
@@ -59,6 +59,7 @@ sub run {
         ($self->{port} ? (port => $self->{port}) : ()),
     );
 
+    weaken($self);
     $self;
 }
 
@@ -130,23 +131,29 @@ Test::Fake::HTTPD is a fake HTTP server module for testing.
 
 =head1 METHODS
 
-=over
+=over 4
 
-=item new
+=item new( %args )
 
-=item run
+Returns a new instance.
+
+=item run( $app_coderef )
+
+Starts this HTTP server.
 
 =item port
+
+Returns a port number of running.
 
 =back
 
 =head1 FUNCTIONS
 
-=over
+=over 4
 
 =item run_http_server
 
-Starts HTTP server and guard instance.
+Starts HTTP server and returns the guard instance.
 
   my $httpd = run_http_server {
       my $req = shift;
