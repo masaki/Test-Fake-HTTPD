@@ -10,6 +10,7 @@ all_from 'lib/Test/Fake/HTTPD.pm';
 requires 'HTTP::Daemon';
 requires 'HTTP::Message::PSGI';
 requires 'Test::TCP';
+requires 'URI';
 requires 'Time::HiRes';
 requires 'Scalar::Util' => 1.14;
 requires 'Carp';

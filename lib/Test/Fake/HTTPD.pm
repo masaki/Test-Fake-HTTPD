@@ -6,6 +6,7 @@ use warnings;
 use HTTP::Daemon;
 use HTTP::Message::PSGI qw(res_from_psgi);
 use Test::TCP qw(wait_port);
+use URI;
 use Time::HiRes ();
 use Scalar::Util qw(blessed weaken);
 use Carp qw(croak);
@@ -65,7 +66,18 @@ sub run {
 
 sub port {
     my $self = shift;
-    return $self->{server} ? $self->{server}->port : 0;
+    return $self->endpoint->port;
+}
+
+sub host_port {
+    my $self = shift;
+    return $self->endpoint->host_port;
+}
+
+sub endpoint {
+    my $self = shift;
+    my $url = sprintf 'http://127.0.0.1:%d', $self->{server} ? $self->{server}->port : 0;
+    return URI->new($url);
 }
 
 sub _is_win32 { $^O eq 'MSWin32' }
@@ -107,6 +119,7 @@ Test::Fake::HTTPD - a fake HTTP server
 
 =head1 SYNOPSIS
 
+DSL-style
     use Test::Fake::HTTPD;
 
     my $httpd = run_http_server {
@@ -123,6 +136,21 @@ Test::Fake::HTTPD - a fake HTTP server
 
     printf "You can connect to your server at 127.0.0.1:%d.\n", $httpd->port;
 
+    print $httpd->host_port; # "127.0.0.1:nnn"
+    print $httpd->endpoint;  # "http://127.0.0.1:nnn"
+
+    # Stop http server automatically at destruction time.
+
+OO-style
+    use Test::Fake::HTTPD;
+
+    my $httpd = Test::Fake::HTTPD->new(%args);
+    $httpd->run(sub {
+        my $req = shift;
+        # ...
+        [ 200, [ 'Content-Type', 'text/plain' ], [ 'Hello World' ] ];
+    });
+
     # Stop http server automatically at destruction time.
 
 =head1 DESCRIPTION
@@ -137,13 +165,31 @@ Test::Fake::HTTPD is a fake HTTP server module for testing.
 
 Returns a new instance.
 
+  my $httpd = Test::Fake::HTTPD->new(%args);
+
 =item run( $app_coderef )
 
 Starts this HTTP server.
 
+  $httpd->run(sub { ... });
+
 =item port
 
 Returns a port number of running.
+
+  $httpd->port;
+
+=item host_port
+
+Returns a URI host_port of running. ("127.0.0.1:nnn")
+
+  $httpd->host_port;
+
+=item endpoint
+
+Returns an endpoint URI of running. ("http://127.0.0.1:nnn" URI object)
+
+  $httpd->endpoint;
 
 =back
 
@@ -158,7 +204,7 @@ Starts HTTP server and returns the guard instance.
   my $httpd = run_http_server {
       my $req = shift;
       # ...
-      return $res;
+      return $http_or_plack_or_psgi_res;
   };
 
 =back
