@@ -2,6 +2,7 @@ Revision history for Perl extension Test::Fake::HTTPD
 
 trunk
         - added host_port() and endpoint() accessors
+        - memory tests are moved to xt/
 
 0.01
         - original version
