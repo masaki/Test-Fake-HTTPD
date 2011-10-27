@@ -20,7 +20,6 @@ tests 't/*.t';
 test_requires 'Test::More' => 0.98;
 test_requires 'Test::UseAllModules';
 test_requires 'Test::Flatten';
-test_requires 'Test::Memory::Cycle';
 test_requires 'Test::Exception';
 test_requires 'Test::TCP';
 test_requires 'LWP::UserAgent';
