@@ -135,10 +135,13 @@ DSL-style
         return [ 200, [ 'Content-Type' => 'text/plain' ], [ 'Hello World' ] ];
     };
 
+    printf "You can connect to your server at %s.\n", $httpd->host_port;
+    # or
     printf "You can connect to your server at 127.0.0.1:%d.\n", $httpd->port;
 
-    print $httpd->host_port; # "127.0.0.1:nnn"
-    print $httpd->endpoint;  # "http://127.0.0.1:nnn"
+    # access to fake HTTP server
+    use LWP::UserAgent;
+    my $res = LWP::UserAgent->new->get($httpd->endpoint); # "http://127.0.0.1:{port}"
 
     # Stop http server automatically at destruction time.
 
@@ -146,7 +149,10 @@ OO-style
 
     use Test::Fake::HTTPD;
 
-    my $httpd = Test::Fake::HTTPD->new(%args);
+    my $httpd = Test::Fake::HTTPD->new(
+        timeout => 5,
+    );
+
     $httpd->run(sub {
         my $req = shift;
         # ...
@@ -159,47 +165,11 @@ OO-style
 
 Test::Fake::HTTPD is a fake HTTP server module for testing.
 
-=head1 METHODS
-
-=over 4
-
-=item new( %args )
-
-Returns a new instance.
-
-  my $httpd = Test::Fake::HTTPD->new(%args);
-
-=item run( $app_coderef )
-
-Starts this HTTP server.
-
-  $httpd->run(sub { ... });
-
-=item port
-
-Returns a port number of running.
-
-  $httpd->port;
-
-=item host_port
-
-Returns a URI host_port of running. ("127.0.0.1:nnn")
-
-  $httpd->host_port;
-
-=item endpoint
-
-Returns an endpoint URI of running. ("http://127.0.0.1:nnn" URI object)
-
-  $httpd->endpoint;
-
-=back
-
 =head1 FUNCTIONS
 
 =over 4
 
-=item run_http_server
+=item * C<run_http_server { ... }>
 
 Starts HTTP server and returns the guard instance.
 
@@ -208,6 +178,75 @@ Starts HTTP server and returns the guard instance.
       # ...
       return $http_or_plack_or_psgi_res;
   };
+
+  # can use $httpd guard object, same as OO-style
+  LWP::UserAgent->new->get($httpd->endpoint);
+
+=back
+
+=head1 METHODS
+
+=over 4
+
+=item * C<new( %args )>
+
+Returns a new instance.
+
+  my $httpd = Test::Fake::HTTPD->new(%args);
+
+C<%args> are:
+
+=over 8
+
+=item * C<timeout>
+
+timeout value (default: 5)
+
+=item * C<listen>
+
+queue size for listen (default: 5)
+
+=item * C<port>
+
+local bind port number (default: auto detection)
+
+=back
+
+  my $httpd = Test::Fake::HTTPD->new(
+      timeout => 10,
+      listen  => 10,
+      port    => 3333,
+  );
+
+=item * C<run( sub { ... } )>
+
+Starts this HTTP server.
+
+  $httpd->run(sub { ... });
+
+=item * C<port>
+
+Returns a port number of running.
+
+  my $port = $httpd->port;
+
+=item * C<host_port>
+
+Returns a URI host_port of running. ("127.0.0.1:{port}")
+
+  my $host_port = $httpd->host_port;
+
+=item * C<endpoint>
+
+Returns an endpoint URI of running. ("http://127.0.0.1:{port}" URI object)
+
+  use LWP::UserAgent;
+
+  my $res = LWP::UserAgent->new->get($httpd->endpoint);
+
+  my $url = $httpd->endpoint;
+  $url->path('/foo/bar');
+  my $res = LWP::UserAgent->new->get($url);
 
 =back
 
