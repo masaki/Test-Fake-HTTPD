@@ -4,12 +4,11 @@ Makefile
 Makefile.old
 MANIFEST
 MANIFEST.bak
-META.yml
+META.*
+MYMETA.*
 blib
-cover_db
-cover_db_view
+cover_db*
 inc
-nytprof
-nytprof.out
+nytprof*
 pm_to_blib
 tmon.out

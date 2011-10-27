@@ -7,10 +7,16 @@ name 'Test-Fake-HTTPD';
 license 'perl';
 all_from 'lib/Test/Fake/HTTPD.pm';
 
-# requires '';
+requires 'HTTP::Daemon';
+requires 'HTTP::Message::PSGI';
+requires 'Test::TCP';
+requires 'Time::HiRes';
+requires 'Scalar::Util' => 1.14;
+requires 'Carp';
+requires 'Exporter';
 
 tests 't/*.t';
-test_requires 'Test::More';
+test_requires 'Test::More' => 0.98;
 test_requires 'Test::UseAllModules';
 
 recursive_author_tests 'xt';

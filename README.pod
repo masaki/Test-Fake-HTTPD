@@ -1,0 +1,76 @@
+=head1 NAME
+
+Test::Fake::HTTPD - a fake HTTP server
+
+=head1 SYNOPSIS
+
+    use Test::Fake::HTTPD;
+
+    my $httpd = run_http_server {
+        my $req = shift;
+        # ...
+
+        # 1. HTTP::Response ok
+        return $http_response;
+        # 2. Plack::Response ok
+        return $plack_response;
+        # 3. PSGI response ok
+        return [ 200, [ 'Content-Type' => 'text/plain' ], [ 'Hello World' ] ];
+    };
+
+    printf "You can connect to your server at 127.0.0.1:%d.\n", $httpd->port;
+
+    # Stop http server automatically at destruction time.
+
+=head1 DESCRIPTION
+
+Test::Fake::HTTPD is a fake HTTP server module for testing.
+
+=head1 METHODS
+
+=over
+
+=item new
+
+=item run
+
+=item port
+
+=back
+
+=head1 FUNCTIONS
+
+=over
+
+=item run_http_server
+
+Starts HTTP server and guard instance.
+
+  my $httpd = run_http_server {
+      my $req = shift;
+      # ...
+      return $res;
+  };
+
+=back
+
+=head1 AUTHOR
+
+NAKAGAWA Masaki E<lt>masaki@cpan.orgE<gt>
+
+=head1 THANKS TO
+
+xaicron
+
+=head1 LICENSE
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=head1 SEE ALSO
+
+L<Test::TCP>, L<HTTP::Daemon>, L<HTTP::Message::PSGI>
+
+
+=cut
+

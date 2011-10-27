@@ -6,6 +6,7 @@
 ~$
 ^#
 ^MANIFEST\.
+^MYMETA\.
 ^Makefile$
 ^Build$
 \.old$
