@@ -1,7 +1,4 @@
 use inc::Module::Install;
-use Module::Install::AuthorTests;
-use Module::Install::Repository;
-use Module::Install::ReadmePodFromPod;
 
 name 'Test-Fake-HTTPD';
 license 'perl';

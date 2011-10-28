@@ -19,7 +19,6 @@
 ^nytprof
 ^tmon\.out
 ^tools/
-^inc/
 ^author/
 \.cvsignore
 \.gitignore
