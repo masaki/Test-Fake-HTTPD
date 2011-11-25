@@ -1,5 +1,4 @@
 use Test::More;
-use Test::Flatten;
 use Test::Exception;
 use Test::TCP qw(wait_port);
 use LWP::UserAgent;
