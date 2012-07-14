@@ -9,26 +9,32 @@ BEGIN {
 
 use Test::Fake::HTTPD;
 
-describe 'run_http_server' => sub {
-    my $httpd = run_http_server {
+for my $module (qw/HTTP::Daemon::SSL LWP::Protocol::https/) {
+    plan skip_all => "$module required" unless eval "use $module; 1";
+}
+
+describe 'run_https_server' => sub {
+    my $httpd = run_https_server {
         my $req = shift;
         [ 200, [ 'Content-Type' => 'text/plain' ], [ 'Hello World' ] ];
     };
 
     it 'should return a server info' => sub {
         my $port = $httpd->port;
-        ok $port;
-        ok $port > 0;
-        is $httpd->host_port => "127.0.0.1:$port";
-        is $httpd->endpoint  => "http://127.0.0.1:$port";
-    };
 
-    it 'should connect to server' => sub {
-        lives_ok { wait_port($httpd->port) };
+        ok $httpd->port;
+        is $httpd->host_port => "127.0.0.1:$port";
+        is $httpd->endpoint  => "https://127.0.0.1:$port";
     };
 
     it 'should receive correct response' => sub {
-        my $res = LWP::UserAgent->new->get($httpd->endpoint);
+        my $ua = LWP::UserAgent->new(ssl_opts => {
+            SSL_verify_mode => 0,
+            verify_hostname => 0,
+        });
+
+        my $res = $ua->get($httpd->endpoint);
+
         is $res->code => 200;
         is $res->header('Content-Type') => 'text/plain';
         is $res->content => 'Hello World';

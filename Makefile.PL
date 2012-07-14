@@ -13,6 +13,9 @@ requires 'Scalar::Util' => 1.14;
 requires 'Carp';
 requires 'Exporter';
 
+# SSL support
+recommends 'HTTP::Daemon::SSL';
+
 tests 't/*.t';
 test_requires 'Test::More' => 0.98;
 test_requires 'Test::UseAllModules';

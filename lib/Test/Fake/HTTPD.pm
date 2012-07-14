@@ -17,14 +17,35 @@ $VERSION = eval $VERSION;
 
 our @EXPORT = qw(run_http_server);
 
+{
+    local $@;
+    eval 'use HTTP::Daemon::SSL';
+    push @EXPORT, 'run_https_server' unless $@;
+}
+
 sub run_http_server (&) {
     my $app = shift;
     __PACKAGE__->new->run($app);
 }
 
+sub run_https_server (&) {
+    my $app = shift;
+    __PACKAGE__->new(scheme => 'https')->run($app);
+}
+
 sub new {
     my ($class, %args) = @_;
-    bless { timeout => 5, listen => 5, %args }, $class;
+    bless { timeout => 5, listen => 5, scheme => 'http', %args }, $class;
+}
+
+our $DAEMON_MAP = {
+    http  => 'HTTP::Daemon',
+    https => 'HTTP::Daemon::SSL',
+};
+
+sub _daemon_class {
+    my $self = shift;
+    return $DAEMON_MAP->{$self->{scheme}};
 }
 
 sub run {
@@ -36,7 +57,7 @@ sub run {
 
             my $d;
             for (1..10) {
-                $d = HTTP::Daemon->new(
+                $d = $self->_daemon_class->new(
                     LocalAddr => '127.0.0.1',
                     LocalPort => $port,
                     Timeout   => $self->{timeout},
@@ -46,7 +67,10 @@ sub run {
                 ) and last;
                 Time::HiRes::sleep(0.1);
             }
+
             croak("Can't accepted on 127.0.0.1:$port") unless $d;
+
+            $d->accept; # wait for port check from parent process
 
             while (my $c = $d->accept) {
                 while (my $req = $c->get_request) {
@@ -64,9 +88,14 @@ sub run {
     $self;
 }
 
+sub scheme {
+    my $self = shift;
+    return $self->{scheme};
+}
+
 sub port {
     my $self = shift;
-    return $self->endpoint->port;
+    return $self->{server} ? $self->{server}->port : 0;
 }
 
 sub host_port {
@@ -76,7 +105,7 @@ sub host_port {
 
 sub endpoint {
     my $self = shift;
-    my $url = sprintf 'http://127.0.0.1:%d', $self->{server} ? $self->{server}->port : 0;
+    my $url = sprintf '%s://127.0.0.1:%d', $self->scheme, $self->port;
     return URI->new($url);
 }
 
@@ -182,6 +211,27 @@ Starts HTTP server and returns the guard instance.
   # can use $httpd guard object, same as OO-style
   LWP::UserAgent->new->get($httpd->endpoint);
 
+=item * C<run_https_server { ... }>
+
+Starts B<HTTPS> server and returns the guard instance.
+
+If you use this method, you MUST install L<HTTP::Daemon::SSL>.
+
+  my $httpd = run_https_server {
+      my $req = shift;
+      # ...
+      return $http_or_plack_or_psgi_res;
+  };
+
+  # can use $httpd guard object, same as OO-style
+  my $ua = LWP::UserAgent->new(
+      ssl_opts => {
+          SSL_verify_mode => 0,
+          verify_hostname => 0,
+      },
+  );
+  $ua->get($httpd->endpoint);
+
 =back
 
 =head1 METHODS
@@ -265,6 +315,6 @@ it under the same terms as Perl itself.
 
 =head1 SEE ALSO
 
-L<Test::TCP>, L<HTTP::Daemon>, L<HTTP::Message::PSGI>
+L<Test::TCP>, L<HTTP::Daemon>, L<HTTP::Daemon::SSL>, L<HTTP::Message::PSGI>
 
 =cut
