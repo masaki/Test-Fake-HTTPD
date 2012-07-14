@@ -274,6 +274,12 @@ Starts this HTTP server.
 
   $httpd->run(sub { ... });
 
+=item * C<scheme>
+
+Returns a scheme of running, "http" or "https".
+
+  my $scheme = $httpd->scheme;
+
 =item * C<port>
 
 Returns a port number of running.
