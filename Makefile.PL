@@ -25,6 +25,5 @@ test_requires 'LWP::UserAgent';
 
 recursive_author_tests 'xt';
 auto_set_repository;
-readme_pod_from 'lib/Test/Fake/HTTPD.pm';
 
 WriteAll;
