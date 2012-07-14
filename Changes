@@ -1,5 +1,8 @@
 Revision history for Perl extension Test::Fake::HTTPD
 
+0.04
+        - support HTTPS server
+
 0.03
         - added inc/ to package
 
