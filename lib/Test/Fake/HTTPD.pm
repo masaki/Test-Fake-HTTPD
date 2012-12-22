@@ -15,13 +15,9 @@ use Exporter qw(import);
 our $VERSION = '0.04';
 $VERSION = eval $VERSION;
 
-our @EXPORT = qw(run_http_server);
+our @EXPORT = qw(run_http_server run_https_server);
 
-{
-    local $@;
-    eval 'use HTTP::Daemon::SSL';
-    push @EXPORT, 'run_https_server' unless $@;
-}
+our $ENABLE_SSL = eval { require HTTP::Daemon::SSL; 1 };
 
 sub run_http_server (&) {
     my $app = shift;
@@ -30,7 +26,8 @@ sub run_http_server (&) {
 
 sub run_https_server (&) {
     my $app = shift;
-    __PACKAGE__->new(scheme => 'https')->run($app);
+    my $scheme = $ENABLE_SSL ? 'https' : 'http'; # fallback HTTP
+    __PACKAGE__->new(scheme => $scheme)->run($app);
 }
 
 sub new {
