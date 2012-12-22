@@ -1,5 +1,8 @@
 Revision history for Perl extension Test::Fake::HTTPD
 
+0.05
+        - check if SSL is enable
+
 0.04
         - support HTTPS server
 

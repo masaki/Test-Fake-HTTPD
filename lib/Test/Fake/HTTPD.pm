@@ -12,7 +12,7 @@ use Scalar::Util qw(blessed weaken);
 use Carp qw(croak);
 use Exporter qw(import);
 
-our $VERSION = '0.04';
+our $VERSION = '0.05';
 $VERSION = eval $VERSION;
 
 our @EXPORT = qw(run_http_server run_https_server);
