@@ -1,5 +1,8 @@
 Revision history for Perl extension Test::Fake::HTTPD
 
+0.06
+        - add unexported enable_ssl() helper
+
 0.05
         - check if SSL is enable
 
