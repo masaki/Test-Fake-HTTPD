@@ -18,16 +18,20 @@ $VERSION = eval $VERSION;
 our @EXPORT = qw(run_http_server run_https_server);
 
 our $ENABLE_SSL = eval { require HTTP::Daemon::SSL; 1 };
+sub enable_ssl { $ENABLE_SSL }
 
 sub run_http_server (&) {
     my $app = shift;
     __PACKAGE__->new->run($app);
 }
 
-sub run_https_server (&) {
-    my $app = shift;
-    my $scheme = $ENABLE_SSL ? 'https' : 'http'; # fallback HTTP
-    __PACKAGE__->new(scheme => $scheme)->run($app);
+sub run_https_server (&) {} # noop
+if ($ENABLE_SSL) {
+    no warnings 'redefine';
+    *run_https_server = sub (&) {
+        my $app = shift;
+        __PACKAGE__->new(scheme => 'https')->run($app);
+    };
 }
 
 sub new {

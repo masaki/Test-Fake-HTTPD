@@ -9,9 +9,7 @@ BEGIN {
 
 use Test::Fake::HTTPD;
 
-for my $module (qw/HTTP::Daemon::SSL LWP::Protocol::https/) {
-    plan skip_all => "$module required" unless eval "use $module; 1";
-}
+plan skip_all => "disable SSL" unless Test::Fake::HTTPD::enable_ssl();
 
 describe 'run_https_server' => sub {
     my $httpd = run_https_server {
