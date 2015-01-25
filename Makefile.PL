@@ -6,6 +6,7 @@ all_from 'lib/Test/Fake/HTTPD.pm';
 
 requires 'HTTP::Daemon';
 requires 'HTTP::Message::PSGI';
+requires 'Test::SharedFork' => '0.29';  # RT#101692
 requires 'Test::TCP';
 requires 'URI';
 requires 'Time::HiRes';
