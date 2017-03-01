@@ -1,5 +1,7 @@
 Revision history for Perl extension Test::Fake::HTTPD
 
+{{$NEXT}}
+
 0.07 2015-01-25T16:33:49Z
     - Add an explicit dependency on Test::SharedFork to avoid issues with the new Test::Builder.
     (Reported by dolmen++)
