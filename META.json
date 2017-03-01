@@ -77,7 +77,7 @@
          "web" : "https://github.com/masaki/Test-Fake-HTTPD"
       }
    },
-   "version" : "0.07",
+   "version" : "0.08",
    "x_authority" : "cpan:MASAKI",
    "x_contributors" : [
       "Olivier Mengué <dolmen@cpan.org>",
