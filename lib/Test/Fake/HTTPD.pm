@@ -15,10 +15,16 @@ use Exporter qw(import);
 our $VERSION = '0.07';
 $VERSION = eval $VERSION;
 
-our @EXPORT = qw(run_http_server run_https_server);
+our @EXPORT = qw(
+    run_http_server run_https_server
+    extra_daemon_args
+);
 
 our $ENABLE_SSL = eval { require HTTP::Daemon::SSL; 1 };
 sub enable_ssl { $ENABLE_SSL }
+
+our %EXTRA_DAEMON_ARGS = ();
+sub extra_daemon_args (%) { %EXTRA_DAEMON_ARGS = @_ }
 
 sub run_http_server (&) {
     my $app = shift;
@@ -52,6 +58,10 @@ sub _daemon_class {
 sub run {
     my ($self, $app) = @_;
 
+    my %extra_daemon_args = $self->{daemon_args} && ref $self->{daemon_args} eq 'HASH'
+        ? %{ $self->{daemon_args} }
+        : %EXTRA_DAEMON_ARGS;
+
     $self->{server} = Test::TCP->new(
         code => sub {
             my $port = shift;
@@ -65,6 +75,7 @@ sub run {
                     Proto     => 'tcp',
                     Listen    => $self->{listen},
                     ($self->_is_win32 ? () : (ReuseAddr => 1)),
+                    %extra_daemon_args,
                 ) and last;
                 Time::HiRes::sleep(0.1);
             }
@@ -180,7 +191,8 @@ OO-style
     use Test::Fake::HTTPD;
 
     my $httpd = Test::Fake::HTTPD->new(
-        timeout => 5,
+        timeout     => 5,
+        daemon_args => { ... }, # HTTP::Daemon args
     );
 
     $httpd->run(sub {
@@ -217,6 +229,10 @@ Starts HTTP server and returns the guard instance.
 Starts B<HTTPS> server and returns the guard instance.
 
 If you use this method, you MUST install L<HTTP::Daemon::SSL>.
+
+  extra_daemon_args
+      SSL_key_file  => "certs/server-key.pem",
+      SSL_cert_file => "certs/server-cert.pem";
 
   my $httpd = run_https_server {
       my $req = shift;

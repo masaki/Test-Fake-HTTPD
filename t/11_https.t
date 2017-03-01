@@ -11,6 +11,10 @@ use Test::Fake::HTTPD;
 
 plan skip_all => "disable SSL" unless Test::Fake::HTTPD::enable_ssl();
 
+extra_daemon_args
+    SSL_key_file  => 'certs/server-key.pem',
+    SSL_cert_file => 'certs/server-cert.pem';
+
 describe 'run_https_server' => sub {
     my $httpd = run_https_server {
         my $req = shift;

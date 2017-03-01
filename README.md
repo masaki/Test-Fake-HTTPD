@@ -35,7 +35,8 @@ OO-style
     use Test::Fake::HTTPD;
 
     my $httpd = Test::Fake::HTTPD->new(
-        timeout => 5,
+        timeout     => 5,
+        daemon_args => { ... }, # HTTP::Daemon args
     );
 
     $httpd->run(sub {
@@ -70,6 +71,10 @@ Test::Fake::HTTPD is a fake HTTP server module for testing.
     Starts **HTTPS** server and returns the guard instance.
 
     If you use this method, you MUST install [HTTP::Daemon::SSL](https://metacpan.org/pod/HTTP::Daemon::SSL).
+
+        extra_daemon_args
+            SSL_key_file  => "certs/server-key.pem",
+            SSL_cert_file => "certs/server-cert.pem";
 
         my $httpd = run_https_server {
             my $req = shift;
