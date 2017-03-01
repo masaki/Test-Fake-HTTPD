@@ -26,16 +26,6 @@
       ]
    },
    "prereqs" : {
-      "build" : {
-         "requires" : {
-            "ExtUtils::MakeMaker" : "6.59",
-            "LWP::UserAgent" : "0",
-            "Test::Exception" : "0",
-            "Test::More" : "0.98",
-            "Test::TCP" : "0",
-            "Test::UseAllModules" : "0"
-         }
-      },
       "configure" : {
          "requires" : {
             "Module::Build::Tiny" : "0.035"
@@ -62,6 +52,16 @@
             "Time::HiRes" : "0",
             "URI" : "0",
             "perl" : "5.008001"
+         }
+      },
+      "test" : {
+         "requires" : {
+            "ExtUtils::MakeMaker" : "6.59",
+            "LWP::UserAgent" : "0",
+            "Test::Exception" : "0",
+            "Test::More" : "0.98",
+            "Test::TCP" : "0",
+            "Test::UseAllModules" : "0"
          }
       }
    },
