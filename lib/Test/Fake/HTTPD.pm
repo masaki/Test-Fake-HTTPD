@@ -12,7 +12,7 @@ use Scalar::Util qw(blessed weaken);
 use Carp qw(croak);
 use Exporter qw(import);
 
-our $VERSION = '0.08';
+our $VERSION = '0.09';
 $VERSION = eval $VERSION;
 
 our @EXPORT = qw(

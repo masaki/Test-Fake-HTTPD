@@ -77,13 +77,13 @@
          "web" : "https://github.com/masaki/Test-Fake-HTTPD"
       }
    },
-   "version" : "0.08",
+   "version" : "0.09",
    "x_authority" : "cpan:MASAKI",
    "x_contributors" : [
-      "Masaki Nakagawa <masaki.nakagawa@gmail.com>",
       "Olivier Mengué <dolmen@cpan.org>",
+      "Petr Písař <ppisar@redhat.com>",
       "Richard Hansen <rhansen@rhansen.org>",
-      "Petr Písař <ppisar@redhat.com>"
+      "ikasam_a <masaki.nakagawa@gmail.com>"
    ],
    "x_serialization_backend" : "JSON::PP version 4.04",
    "x_static_install" : 1
