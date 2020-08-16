@@ -10,7 +10,7 @@
    ],
    "meta-spec" : {
       "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
-      "version" : "2"
+      "version" : 2
    },
    "name" : "Test-Fake-HTTPD",
    "no_index" : {
@@ -80,10 +80,11 @@
    "version" : "0.08",
    "x_authority" : "cpan:MASAKI",
    "x_contributors" : [
+      "Masaki Nakagawa <masaki.nakagawa@gmail.com>",
       "Olivier Mengué <dolmen@cpan.org>",
       "Richard Hansen <rhansen@rhansen.org>",
-      "ikasam_a <masaki.nakagawa@gmail.com>"
+      "Petr Písař <ppisar@redhat.com>"
    ],
-   "x_serialization_backend" : "JSON::PP version 2.27400_02",
+   "x_serialization_backend" : "JSON::PP version 4.04",
    "x_static_install" : 1
 }
